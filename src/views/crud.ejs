@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD with Vinh</title>
+    
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            
+            <form action="/post-crud" method="post">
+                <div class="form-row">
+                  <div class="col-12 mt-3"> Chao Vinh</div>
+                  <div class="form-group col-md-6">
+                    <label for="inputEmail4">Email</label>
+                    <input type="email" class="form-control" name="email" placeholder="Email">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="inputPassword4">Password</label>
+                    <input type="password" class="form-control" name="password" placeholder="Password">
+                  </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputLastName">First name</label>
+                      <input type="text" class="form-control" name="firstname" placeholder="First Name">
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="inputFirstName">Last Name</label>
+                      <input type="text" class="form-control" name="lastname" placeholder="Last Name">
+                    </div>
+                  </div>
+
+
+                <div class="form-row">
+                  <div class="form-group col-md-3">
+                    <label for="inputRole">Role</label>
+                    <select name="role" class="form-control">
+                      <option value="admin">Admin</option>
+                      <option value="staff">Staff</option>
+                      <option value="QA-manage">QA-manager</option>
+                      <option value="QA-Coordinator">Coordinator</option>
+                    </select>
+                  </div>     
+                </div>
+                <button type="submit" class="btn btn-primary">Sign in</button>
+              </form>
+        </div>
+    </div>
+
+    
+</body>
+</html>
