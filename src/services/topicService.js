@@ -36,8 +36,8 @@ let createNewTopic = (data) => {
           final_closure_date: data.finaldate,
         });
         resolve({
-          errCode: 1,
-          message: "Topic name is exist",
+          errCode: 0,
+          message: "Topic name is created",
         });
       }
     } catch (e) {
@@ -76,17 +76,39 @@ let updateTopic = (data) => {
         raw: false,
       });
       if (topic) {
-        topic.topic_name = data.name;
-        topic.description = data.description;
-        topic.start_date = data.startdate;
-        topic.first_closure_date = data.firstdate;
-        topic.final_closure_date = data.finaldate;
+        if (topic.topic_name == data.name) {
+          topic.topic_name = data.name;
+          topic.description = data.description;
+          topic.start_date = data.startdate;
+          topic.first_closure_date = data.firstdate;
+          topic.final_closure_date = data.finaldate;
 
-        await topic.save();
-        resolve({
-          errCode: 0,
-          message: "Update done!",
-        });
+          await topic.save();
+          resolve({
+            errCode: 0,
+            message: "Update done!",
+          });
+        } else {
+          let check = await checkNameTopic(data.name);
+          if (check) {
+            resolve({
+              errCode: 1,
+              message: "Topic name is exist",
+            });
+          } else {
+            topic.topic_name = data.name;
+            topic.description = data.description;
+            topic.start_date = data.startdate;
+            topic.first_closure_date = data.firstdate;
+            topic.final_closure_date = data.finaldate;
+
+            await topic.save();
+            resolve({
+              errCode: 0,
+              message: "Update done!",
+            });
+          }
+        }
       } else {
         resolve({
           errcode: 2,
