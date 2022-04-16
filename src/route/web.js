@@ -87,12 +87,12 @@ let initWebRoutes = (app) => {
     "/api/delete-comment",
     LikeCommentController.handleDeleteComment
   );
-
-  // idea controller
   router.get(
     "/api/getAllCommentByIdea",
     LikeCommentController.getAllCommentByIdea
   );
+
+  // idea controller
   router.get(
     "/api/get-all-ideas-by-topic",
     ideaController.handleGetAllIdeasByTopic
@@ -104,7 +104,18 @@ let initWebRoutes = (app) => {
     ideaController.handleCreateIdea
   );
   router.get("/api/download-idea", ideaController.handleDownloadFile);
+  router.get(
+    "/api/get-all-idea-by-user-topic",
+    ideaController.handleGetIdeasByUserTopic
+  );
 
+  router.delete("/api/delete-file-idea", ideaController.handleDeleteFileByIdea);
+  router.delete("/api/delete-idea", ideaController.handleDeleteIdeaByUser);
+  router.post(
+    "/api/update-file-idea",
+    upload.single("file"),
+    ideaController.handleUpdateFile
+  );
   return app.use("/", router);
 };
 
