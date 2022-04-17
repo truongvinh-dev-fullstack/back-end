@@ -1,17 +1,17 @@
 import db from "../models/index";
 const fs = require("fs");
 
-let getAllIdeasByTopic = (topicId) => {
+let getAllIdeasByCategory = (categoryId) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!topicId) {
+      if (!categoryId) {
         resolve({
           errCode: -1,
-          message: "Missing topic name",
+          message: "Missing category id",
         });
       } else {
         let data = await db.Ideas.findAll({
-          where: { topicId: topicId },
+          where: { categoryId: categoryId },
         });
         if (data) {
           resolve({
@@ -51,7 +51,7 @@ let handleCreateIdea = (filename, path, data) => {
         });
       } else {
         await db.Ideas.create({
-          topicId: data.topicId,
+          categoryId: data.categoryId,
           userId: data.userId,
           idea_name: data.name,
           description: data.description,
@@ -76,10 +76,10 @@ let handleCreateIdea = (filename, path, data) => {
   });
 };
 
-let handleGetIdeasByUserTopic = (userId, topicId) => {
+let handleGetIdeasByUserTopic = (userId, categoryId) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!userId || !topicId) {
+      if (!userId || !categoryId) {
         resolve({
           errCode: -1,
           message: "Missing parameter!",
@@ -88,7 +88,7 @@ let handleGetIdeasByUserTopic = (userId, topicId) => {
         let ideas = await db.Ideas.findAll({
           where: {
             userId: userId,
-            topicId: topicId,
+            categoryId: categoryId,
           },
         });
         if (ideas) {
@@ -244,7 +244,7 @@ let handleDeleteIdeaByUser = (id, linkFile) => {
 };
 
 module.exports = {
-  getAllIdeasByTopic: getAllIdeasByTopic,
+  getAllIdeasByCategory: getAllIdeasByCategory,
   handleCreateIdea: handleCreateIdea,
   handleGetIdeasByUserTopic: handleGetIdeasByUserTopic,
   deleteFileByIdea: deleteFileByIdea,

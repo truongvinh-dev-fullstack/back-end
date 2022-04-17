@@ -1,37 +1,5 @@
 import db from "../models/index";
 
-let getAllIdeasByTopic = (topicId) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      if (!topicId) {
-        resolve({
-          errCode: -1,
-          message: "Missing topic name",
-        });
-      } else {
-        let data = await db.Ideas.findAll({
-          where: { topicId: topicId },
-        });
-        if (data) {
-          resolve({
-            errCode: 0,
-            message: "Find ALl Done!",
-            data: data,
-          });
-        } else {
-          resolve({
-            errCode: 0,
-            message: "Find ALl Done!",
-            data: [],
-          });
-        }
-      }
-    } catch (e) {
-      reject(e);
-    }
-  });
-};
-
 let handleLikeDisLike = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -119,10 +87,10 @@ let getStatusIsLike = (userId, ideaId) => {
   });
 };
 
-let getAllStatusByUserAndTopic = (userId, topicId) => {
+let getAllStatusByUserAndTopic = (userId, categoryId) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!userId || !topicId) {
+      if (!userId || !categoryId) {
         resolve({
           errCode: -1,
           message: "Missing userId or ideaId",
@@ -133,8 +101,8 @@ let getAllStatusByUserAndTopic = (userId, topicId) => {
           include: [
             {
               model: db.Ideas,
-              where: { topicId: topicId },
-              attributes: ["topicId"],
+              where: { categoryId: categoryId },
+              attributes: ["categoryId"],
             },
           ],
           raw: true,
@@ -158,13 +126,13 @@ let getAllStatusByUserAndTopic = (userId, topicId) => {
   });
 };
 
-let getAllLikeByTopic = async (topicId) => {
+let getAllLikeByTopic = async (categoryId) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!topicId) {
+      if (!categoryId) {
         resolve({
           errCode: -1,
-          message: "Missing topicId",
+          message: "Missing categoryId",
         });
       } else {
         let check = await db.Ideas_islike.findAll({
@@ -172,8 +140,8 @@ let getAllLikeByTopic = async (topicId) => {
           include: [
             {
               model: db.Ideas,
-              where: { topicId: topicId },
-              attributes: ["topicId"],
+              where: { categoryId: categoryId },
+              attributes: ["categoryId"],
             },
           ],
           raw: true,
@@ -197,13 +165,13 @@ let getAllLikeByTopic = async (topicId) => {
   });
 };
 
-let getAllDisLikeByTopic = async (topicId) => {
+let getAllDisLikeByTopic = async (categoryId) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!topicId) {
+      if (!categoryId) {
         resolve({
           errCode: -1,
-          message: "Missing topicId",
+          message: "Missing categoryId",
         });
       } else {
         let check = await db.Ideas_islike.findAll({
@@ -211,8 +179,8 @@ let getAllDisLikeByTopic = async (topicId) => {
           include: [
             {
               model: db.Ideas,
-              where: { topicId: topicId },
-              attributes: ["topicId"],
+              where: { categoryId: categoryId },
+              attributes: ["categoryId"],
             },
           ],
           raw: true,
@@ -353,7 +321,6 @@ let deleteComment = (id) => {
 };
 
 module.exports = {
-  getAllIdeasByTopic: getAllIdeasByTopic,
   handleLikeDisLike: handleLikeDisLike,
   getStatusIsLike: getStatusIsLike,
   getAllStatusByUserAndTopic: getAllStatusByUserAndTopic,

@@ -1,7 +1,8 @@
 import express from "express";
 import userController from "../controllers/userController";
 import homeController from "../controllers/homeController";
-import topicController from "../controllers/topicController";
+import categoryController from "../controllers/categoryController";
+import DepartmentController from "../controllers/departmentController";
 import LikeCommentController from "../controllers/LikeCommentController";
 import ideaController from "../controllers/ideaController";
 var appRoot = require("app-root-path");
@@ -54,10 +55,33 @@ let initWebRoutes = (app) => {
   router.put("/api/edit-user", userController.handleEditUser);
   router.delete("/api/delete-user", userController.handleDeleteUser);
 
-  router.post("/api/create-new-topic", topicController.handleCreateNewTopic);
-  router.get("/api/get-all-topics", topicController.handleGetAllTopics);
-  router.put("/api/edit-topic", topicController.handleEditTopic);
-  router.delete("/api/delete-topic", topicController.handleDeleteTopic);
+  router.post(
+    "/api/create-new-category",
+    categoryController.handleCreateNewCategory
+  );
+  router.get(
+    "/api/get-all-category-by-department",
+    categoryController.handleGetAllCategoryByDepartment
+  );
+  router.put("/api/edit-category", categoryController.handleEditCategory);
+  router.delete(
+    "/api/delete-category",
+    categoryController.handleDeleteCategory
+  );
+
+  router.post(
+    "/api/create-new-department",
+    DepartmentController.handleCreateNewDepartment
+  );
+  router.get(
+    "/api/get-all-departments",
+    DepartmentController.handleGetAllDepartments
+  );
+  router.put("/api/edit-department", DepartmentController.handleEditDepartment);
+  router.delete(
+    "/api/delete-department",
+    DepartmentController.handleDeleteDepartment
+  );
 
   // like and comment
   router.post(
@@ -94,8 +118,8 @@ let initWebRoutes = (app) => {
 
   // idea controller
   router.get(
-    "/api/get-all-ideas-by-topic",
-    ideaController.handleGetAllIdeasByTopic
+    "/api/get-all-ideas-by-category",
+    ideaController.handleGetAllIdeasByCategory
   );
 
   router.post(

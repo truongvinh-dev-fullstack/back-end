@@ -1,13 +1,13 @@
 import db from "../models/index";
 const fs = require("fs");
 
-let checkNameTopic = (name) => {
+let checkNameCategory = (name) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let topic = await db.Topics.findOne({
-        where: { topic_name: name },
+      let category = await db.Category.findOne({
+        where: { category_name: name },
       });
-      if (topic) {
+      if (category) {
         resolve(true);
       } else {
         resolve(false);
@@ -18,26 +18,27 @@ let checkNameTopic = (name) => {
   });
 };
 
-let createNewTopic = (data) => {
+let createNewCategory = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let check = await checkNameTopic(data.name);
+      let check = await checkNameCategory(data.name);
       if (check) {
         resolve({
           errCode: 1,
-          message: "Topic name is exist",
+          message: "Category name is exist",
         });
       } else {
-        await db.Topics.create({
-          topic_name: data.name,
+        await db.Category.create({
+          category_name: data.name,
           description: data.description,
           start_date: data.startdate,
           first_closure_date: data.firstdate,
           final_closure_date: data.finaldate,
+          departmentId: data.id,
         });
         resolve({
           errCode: 0,
-          message: "Topic name is created",
+          message: "Done!",
         });
       }
     } catch (e) {
@@ -46,15 +47,18 @@ let createNewTopic = (data) => {
   });
 };
 
-let allTopicService = () => {
+let getAllcategoryServiceById = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let topics = await db.Topics.findAll();
-      if (topics) {
+      console.log("check id: ", id);
+      let categories = await db.Category.findAll({
+        where: { departmentId: id },
+      });
+      if (categories) {
         resolve({
           errCode: 0,
           message: "Find ALl Done!",
-          data: topics,
+          data: categories,
         });
       } else {
         resolve({
@@ -68,41 +72,41 @@ let allTopicService = () => {
   });
 };
 
-let updateTopic = (data) => {
+let updateCategory = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let topic = await db.Topics.findOne({
+      let category = await db.Category.findOne({
         where: { id: data.id },
         raw: false,
       });
-      if (topic) {
-        if (topic.topic_name == data.name) {
-          topic.topic_name = data.name;
-          topic.description = data.description;
-          topic.start_date = data.startdate;
-          topic.first_closure_date = data.firstdate;
-          topic.final_closure_date = data.finaldate;
+      if (category) {
+        if (category.category_name == data.name) {
+          category.category_name = data.name;
+          category.description = data.description;
+          category.start_date = data.startdate;
+          category.first_closure_date = data.firstdate;
+          category.final_closure_date = data.finaldate;
 
-          await topic.save();
+          await category.save();
           resolve({
             errCode: 0,
             message: "Update done!",
           });
         } else {
-          let check = await checkNameTopic(data.name);
+          let check = await checkNameCategory(data.name);
           if (check) {
             resolve({
               errCode: 1,
               message: "Topic name is exist",
             });
           } else {
-            topic.topic_name = data.name;
-            topic.description = data.description;
-            topic.start_date = data.startdate;
-            topic.first_closure_date = data.firstdate;
-            topic.final_closure_date = data.finaldate;
+            category.category_name = data.name;
+            category.description = data.description;
+            category.start_date = data.startdate;
+            category.first_closure_date = data.firstdate;
+            category.final_closure_date = data.finaldate;
 
-            await topic.save();
+            await category.save();
             resolve({
               errCode: 0,
               message: "Update done!",
@@ -112,7 +116,7 @@ let updateTopic = (data) => {
       } else {
         resolve({
           errcode: 2,
-          message: "Topic is not found!",
+          message: "Category is not found!",
         });
       }
     } catch (error) {
@@ -121,23 +125,23 @@ let updateTopic = (data) => {
   });
 };
 
-let deleteTopic = (Id) => {
+let deleteCategory = (Id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      let topic = await db.Topics.findOne({
+      let category = await db.Category.findOne({
         where: { id: Id },
         raw: false,
       });
-      if (topic) {
-        await topic.destroy();
+      if (category) {
+        await category.destroy();
         resolve({
           errCode: 0,
-          message: "Delete User successly!",
+          message: "Delete Category successly!",
         });
       } else {
         resolve({
           errCode: 2,
-          message: "User is not exist",
+          message: "Category is not exist",
         });
       }
     } catch (error) {
@@ -147,8 +151,8 @@ let deleteTopic = (Id) => {
 };
 
 module.exports = {
-  createNewTopic: createNewTopic,
-  allTopicService: allTopicService,
-  updateTopic: updateTopic,
-  deleteTopic: deleteTopic,
+  createNewCategory: createNewCategory,
+  getAllcategoryServiceById: getAllcategoryServiceById,
+  updateCategory: updateCategory,
+  deleteCategory: deleteCategory,
 };

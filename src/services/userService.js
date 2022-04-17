@@ -20,7 +20,7 @@ let handleUserLogin = (email, password) => {
       let isExist = await checkUserEmail(email);
       if (isExist) {
         let user = await db.User.findOne({
-          attributes: ["email", "id", "password", "role"],
+          attributes: ["email", "id", "password", "role", "departmentId"],
           where: { email: email },
           raw: true,
         });
@@ -108,6 +108,7 @@ const createNewUser = (data) => {
         firstname: data.firstname,
         lastname: data.lastname,
         role: data.role,
+        departmentId: data.departmentId,
       });
 
       resolve({
@@ -132,6 +133,7 @@ let updateUser = (data) => {
         user.firstname = data.firstname;
         user.lastname = data.lastname;
         user.role = data.role;
+        user.departmentId = data.departmentId;
 
         await user.save();
         resolve({

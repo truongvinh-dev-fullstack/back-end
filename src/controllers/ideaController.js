@@ -25,14 +25,14 @@ let handleCreateIdea = async (req, res) => {
   console.log("Check file: ", req.file);
 };
 
-let handleGetAllIdeasByTopic = async (req, res) => {
-  if (!req.query.topicId) {
+let handleGetAllIdeasByCategory = async (req, res) => {
+  if (!req.query.categoryId) {
     return res.status(200).json({
       errCode: 1,
       message: "Missing required parameters!",
     });
   }
-  let message = await ideaService.getAllIdeasByTopic(req.query.topicId);
+  let message = await ideaService.getAllIdeasByCategory(req.query.categoryId);
   return res.status(200).json(message);
 };
 
@@ -112,7 +112,7 @@ let handleDeleteIdeaByUser = async (req, res) => {
 };
 
 module.exports = {
-  handleGetAllIdeasByTopic: handleGetAllIdeasByTopic,
+  handleGetAllIdeasByCategory: handleGetAllIdeasByCategory,
   handleCreateIdea: handleCreateIdea,
   handleDownloadFile: handleDownloadFile,
   handleGetIdeasByUserTopic: handleGetIdeasByUserTopic,
