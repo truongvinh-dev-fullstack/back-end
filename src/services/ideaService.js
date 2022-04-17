@@ -12,6 +12,14 @@ let getAllIdeasByCategory = (categoryId) => {
       } else {
         let data = await db.Ideas.findAll({
           where: { categoryId: categoryId },
+          include: [
+            {
+              model: db.User,
+              attributes: ["firstname", "lastname"],
+            },
+          ],
+          raw: true,
+          nest: true,
         });
         if (data) {
           resolve({
@@ -90,6 +98,14 @@ let handleGetIdeasByUserTopic = (userId, categoryId) => {
             userId: userId,
             categoryId: categoryId,
           },
+          include: [
+            {
+              model: db.User,
+              attributes: ["firstname", "lastname"],
+            },
+          ],
+          raw: true,
+          nest: true,
         });
         if (ideas) {
           resolve({
@@ -244,6 +260,105 @@ let handleDeleteIdeaByUser = (id, file_name) => {
   });
 };
 
+let handleGetAllIdea = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let ideas = await db.Ideas.findAll();
+      if (ideas) {
+        resolve({
+          errCode: 0,
+          message: "Find ALl Done!",
+          data: ideas,
+        });
+      } else {
+        resolve({
+          errCode: 1,
+          message: "Error from server",
+        });
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+let getIdeaLikeMost = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let arrAllLike = await db.Ideas_islike.findAll({ where: { isLike: 1 } });
+      let check = await checkIdeaLikeMost(arrAllLike);
+
+      let idea = await db.Ideas.findOne({
+        where: { id: check.mostIdea },
+        include: [
+          {
+            model: db.User,
+            attributes: ["firstname", "lastname"],
+          },
+        ],
+        raw: true,
+        nest: true,
+      });
+      if (idea) {
+        resolve({
+          errCode: 0,
+          data: idea,
+          count: check.max,
+        });
+      } else {
+        resolve({
+          errCode: -1,
+          message: "Fail",
+        });
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+let checkIdeaLikeMost = (arrAllLike) => {
+  let mostIdea = arrAllLike[0].ideaId;
+  let max = 0;
+  for (let i = 0; i < arrAllLike.length; i++) {
+    let curr = 0;
+    for (let j = 0; j < arrAllLike.length; j++) {
+      if (arrAllLike[i].ideaId == arrAllLike[j].ideaId) {
+        curr++;
+      }
+    }
+    if (curr > max) {
+      mostIdea = arrAllLike[i].ideaId;
+      max = curr;
+    }
+  }
+  return { mostIdea: mostIdea, max: max };
+};
+
+let getIdeaNewPost = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let idea = await db.Ideas.findOne({
+        order: [["createdAt", "DESC"]],
+        include: [
+          {
+            model: db.User,
+            attributes: ["firstname", "lastname"],
+          },
+        ],
+        raw: true,
+        nest: true,
+      });
+      resolve({
+        errCode: 0,
+        data: idea,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   getAllIdeasByCategory: getAllIdeasByCategory,
   handleCreateIdea: handleCreateIdea,
@@ -251,4 +366,7 @@ module.exports = {
   deleteFileByIdea: deleteFileByIdea,
   handleUpdateFile: handleUpdateFile,
   handleDeleteIdeaByUser: handleDeleteIdeaByUser,
+  handleGetAllIdea: handleGetAllIdea,
+  getIdeaLikeMost: getIdeaLikeMost,
+  getIdeaNewPost: getIdeaNewPost,
 };

@@ -123,6 +123,9 @@ let initWebRoutes = (app) => {
   );
 
   // idea controller
+
+  router.get("/api/get-all-ideas", ideaController.handleGetAllIdeas);
+
   router.get(
     "/api/get-all-ideas-by-category",
     ideaController.handleGetAllIdeasByCategory
@@ -146,6 +149,9 @@ let initWebRoutes = (app) => {
     upload.single("file"),
     ideaController.handleUpdateFile
   );
+  router.get("/api/idea-like-most", ideaController.handleGetIdeaLikeMost);
+  router.get("/api/get-idea-new", ideaController.handleGetIdeaNewPost);
+
   return app.use("/", router);
 };
 

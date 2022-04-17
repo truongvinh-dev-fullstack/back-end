@@ -94,6 +94,20 @@ let handleDeleteIdeaByUser = async (req, res) => {
     return res.status(200).json(message);
   }
 };
+let handleGetAllIdeas = async (req, res) => {
+  let message = await ideaService.handleGetAllIdea();
+  return res.status(200).json(message);
+};
+
+let handleGetIdeaLikeMost = async (req, res) => {
+  let message = await ideaService.getIdeaLikeMost();
+  return res.status(200).json(message);
+};
+
+let handleGetIdeaNewPost = async (req, res) => {
+  let message = await ideaService.getIdeaNewPost();
+  return res.status(200).json(message);
+};
 
 module.exports = {
   handleGetAllIdeasByCategory: handleGetAllIdeasByCategory,
@@ -103,4 +117,7 @@ module.exports = {
   handleDeleteFileByIdea: handleDeleteFileByIdea,
   handleUpdateFile: handleUpdateFile,
   handleDeleteIdeaByUser: handleDeleteIdeaByUser,
+  handleGetAllIdeas: handleGetAllIdeas,
+  handleGetIdeaLikeMost: handleGetIdeaLikeMost,
+  handleGetIdeaNewPost: handleGetIdeaNewPost,
 };
