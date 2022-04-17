@@ -50,7 +50,6 @@ let createNewCategory = (data) => {
 let getAllcategoryServiceById = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log("check id: ", id);
       let categories = await db.Category.findAll({
         where: { departmentId: id },
       });

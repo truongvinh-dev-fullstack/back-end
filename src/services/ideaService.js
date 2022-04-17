@@ -1,5 +1,8 @@
 import db from "../models/index";
+const CsvParser = require("json2csv").Parser;
 const fs = require("fs");
+const AdmZip = require("adm-zip");
+var appRoot = require("app-root-path");
 
 let getAllIdeasByCategory = (categoryId) => {
   return new Promise(async (resolve, reject) => {
@@ -359,7 +362,66 @@ let getIdeaNewPost = () => {
   });
 };
 
+let handleDeleteCsv = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let allIdea = await db.Ideas.findAll({
+        where: { categoryId: id },
+        attributes: ["idea_name", "description", "file_name", "createdAt"],
+        include: [
+          {
+            model: db.User,
+            attributes: ["firstname", "lastname"],
+          },
+        ],
+        raw: true,
+        nest: false,
+      });
+
+      const csvFields = [
+        "idea_name",
+        "description",
+        "file_name",
+        "createdAt",
+        "User.firstname",
+        "User.lastname",
+      ];
+      const csvParser = new CsvParser({ csvFields });
+      const csvData = csvParser.parse(allIdea);
+
+      resolve(csvData);
+    } catch (e) {
+      reject;
+    }
+  });
+};
+
+let downloadAllIdeaByCsv = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let allIdea = await db.Ideas.findAll({
+        where: { categoryId: id },
+        attributes: ["file_name"],
+      });
+
+      const zip = new AdmZip();
+      for (var i = 0; i < allIdea.length; i++) {
+        zip.addLocalFile(appRoot + "/src/public/files/" + allIdea[i].file_name);
+      }
+      const downloadName = `${Date.now()}.zip`;
+      const data = zip.toBuffer();
+      resolve({
+        downloadName: downloadName,
+        data: data,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
+  downloadAllIdeaByCsv: downloadAllIdeaByCsv,
   getAllIdeasByCategory: getAllIdeasByCategory,
   handleCreateIdea: handleCreateIdea,
   handleGetIdeasByUserTopic: handleGetIdeasByUserTopic,
@@ -369,4 +431,5 @@ module.exports = {
   handleGetAllIdea: handleGetAllIdea,
   getIdeaLikeMost: getIdeaLikeMost,
   getIdeaNewPost: getIdeaNewPost,
+  handleDeleteCsv: handleDeleteCsv,
 };

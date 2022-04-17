@@ -152,6 +152,9 @@ let initWebRoutes = (app) => {
   router.get("/api/idea-like-most", ideaController.handleGetIdeaLikeMost);
   router.get("/api/get-idea-new", ideaController.handleGetIdeaNewPost);
 
+  router.get("/api/download-zip", ideaController.handleDownloadZip);
+  router.get("/api/download-csv", ideaController.handleDownloadCsv);
+
   return app.use("/", router);
 };
 

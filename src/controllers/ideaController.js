@@ -1,7 +1,10 @@
 import { resolveSoa } from "dns";
 import ideaService from "../services/ideaService";
+import JSZip from "jszip";
+const AdmZip = require("adm-zip");
 var appRoot = require("app-root-path");
 const fs = require("fs");
+var uploadDir = fs.readdirSync(appRoot + "/src/public/files");
 
 let handleCreateIdea = async (req, res) => {
   if (!req.file.filename || !req.body.name || !req.body.description) {
@@ -50,7 +53,6 @@ let handleGetIdeasByUserTopic = async (req, res) => {
 };
 
 let handleDeleteFileByIdea = async (req, res) => {
-  console.log("check body: ", req.body);
   if (!req.body.ideaId || !req.body.file_name) {
     return res.status(200).json({
       errCode: 1,
@@ -109,6 +111,25 @@ let handleGetIdeaNewPost = async (req, res) => {
   return res.status(200).json(message);
 };
 
+let handleDownloadZip = async (req, res) => {
+  let message = await ideaService.downloadAllIdeaByCsv(req.query.id);
+
+  res.set("Content-Type", "application/octet-stream");
+  res.set(
+    "Content-Disposition",
+    `attachment; filename=${message.downloadName}`
+  );
+  res.set("Content-Length", message.data.length);
+  res.send(message.data);
+};
+
+let handleDownloadCsv = async (req, res) => {
+  let message = await ideaService.handleDeleteCsv(req.query.id);
+  res.setHeader("Content-Type", "text/csv");
+  res.setHeader("Content-Disposition", "attachment; filename=tutorials.csv");
+  res.send(message);
+};
+
 module.exports = {
   handleGetAllIdeasByCategory: handleGetAllIdeasByCategory,
   handleCreateIdea: handleCreateIdea,
@@ -120,4 +141,6 @@ module.exports = {
   handleGetAllIdeas: handleGetAllIdeas,
   handleGetIdeaLikeMost: handleGetIdeaLikeMost,
   handleGetIdeaNewPost: handleGetIdeaNewPost,
+  handleDownloadZip: handleDownloadZip,
+  handleDownloadCsv: handleDownloadCsv,
 };
