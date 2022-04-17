@@ -150,7 +150,30 @@ let deleteCategory = (Id) => {
   });
 };
 
+let getAllCategory = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let categories = await db.Category.findAll();
+      if (categories) {
+        resolve({
+          errCode: 0,
+          message: "Find ALl Done!",
+          data: categories,
+        });
+      } else {
+        resolve({
+          errCode: 1,
+          message: "Error from server",
+        });
+      }
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
+  getAllCategory: getAllCategory,
   createNewCategory: createNewCategory,
   getAllcategoryServiceById: getAllcategoryServiceById,
   updateCategory: updateCategory,

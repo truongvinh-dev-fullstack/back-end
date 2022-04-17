@@ -33,10 +33,11 @@ let getAllIdeasByCategory = (categoryId) => {
   });
 };
 
-let handleCreateIdea = (filename, path, data) => {
+let handleCreateIdea = (file_name, data) => {
   return new Promise(async (resolve, reject) => {
+    let path = "./src/public/files/" + file_name;
     try {
-      if (!filename || !path || !data) {
+      if (!file_name || !data) {
         fs.unlink(path, (err) => {
           if (err) {
             console.error(err);
@@ -55,8 +56,7 @@ let handleCreateIdea = (filename, path, data) => {
           userId: data.userId,
           idea_name: data.name,
           description: data.description,
-          file_name: filename,
-          linkFile: path,
+          file_name: file_name,
         });
         resolve({
           errCode: 0,
@@ -111,9 +111,10 @@ let handleGetIdeasByUserTopic = (userId, categoryId) => {
   });
 };
 
-let deleteFileByIdea = (ideaId, file_name, path) => {
+let deleteFileByIdea = (ideaId, file_name) => {
   return new Promise(async (resolve, reject) => {
     try {
+      let path = "./src/public/files/" + file_name;
       if (!ideaId || !file_name || !path) {
         resolve({
           errCode: -1,
@@ -126,7 +127,6 @@ let deleteFileByIdea = (ideaId, file_name, path) => {
         });
         if (idea) {
           idea.file_name = "";
-          idea.linkFile = "";
           await idea.save();
 
           fs.unlink(path, (err) => {
@@ -152,10 +152,11 @@ let deleteFileByIdea = (ideaId, file_name, path) => {
   });
 };
 
-let handleUpdateFile = (file_name, path, ideaId) => {
+let handleUpdateFile = (file_name, ideaId) => {
   return new Promise(async (resolve, reject) => {
+    let path = "./src/public/files/" + file_name;
     try {
-      if (!file_name || !path || !ideaId) {
+      if (!file_name || !ideaId) {
         fs.unlink(path, (err) => {
           if (err) {
             console.error(err);
@@ -173,7 +174,6 @@ let handleUpdateFile = (file_name, path, ideaId) => {
         });
         if (idea) {
           idea.file_name = file_name;
-          idea.linkFile = path;
           await idea.save();
 
           resolve({
@@ -205,9 +205,10 @@ let handleUpdateFile = (file_name, path, ideaId) => {
   });
 };
 
-let handleDeleteIdeaByUser = (id, linkFile) => {
+let handleDeleteIdeaByUser = (id, file_name) => {
   return new Promise(async (resolve, reject) => {
     try {
+      let path = "./src/public/files/" + file_name;
       if (!id) {
         resolve({
           errCode: 1,
@@ -220,7 +221,7 @@ let handleDeleteIdeaByUser = (id, linkFile) => {
         });
         if (idea) {
           await idea.destroy();
-          fs.unlink(linkFile, (err) => {
+          fs.unlink(path, (err) => {
             if (err) {
               console.error(err);
               return;

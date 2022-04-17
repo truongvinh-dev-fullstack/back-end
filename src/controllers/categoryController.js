@@ -41,7 +41,13 @@ let handleDeleteCategory = async (req, res) => {
   return res.status(200).json(message);
 };
 
+let handleGetAllCategory = async (req, res) => {
+  let message = await categoryService.getAllCategory();
+  return res.status(200).json(message);
+};
+
 module.exports = {
+  handleGetAllCategory: handleGetAllCategory,
   handleCreateNewCategory: handleCreateNewCategory,
   handleGetAllCategoryByDepartment: handleGetAllCategoryByDepartment,
   handleEditCategory: handleEditCategory,

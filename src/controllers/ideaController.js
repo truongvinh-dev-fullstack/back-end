@@ -4,12 +4,7 @@ var appRoot = require("app-root-path");
 const fs = require("fs");
 
 let handleCreateIdea = async (req, res) => {
-  if (
-    !req.file.filename ||
-    !req.file.path ||
-    !req.body.name ||
-    !req.body.description
-  ) {
+  if (!req.file.filename || !req.body.name || !req.body.description) {
     return res.status(200).json({
       errCode: 1,
       message: "Missing required parameters!",
@@ -17,12 +12,10 @@ let handleCreateIdea = async (req, res) => {
   } else {
     let message = await ideaService.handleCreateIdea(
       req.file.filename,
-      req.file.path,
       req.body
     );
     return res.status(200).json(message);
   }
-  console.log("Check file: ", req.file);
 };
 
 let handleGetAllIdeasByCategory = async (req, res) => {
@@ -58,30 +51,22 @@ let handleGetIdeasByUserTopic = async (req, res) => {
 
 let handleDeleteFileByIdea = async (req, res) => {
   console.log("check body: ", req.body);
-  if (!req.body.ideaId || !req.body.file_name || !req.body.path) {
+  if (!req.body.ideaId || !req.body.file_name) {
     return res.status(200).json({
       errCode: 1,
       message: "Missing required parameters!",
     });
   }
 
-  // fs.unlink(path, (err) => {
-  //   if (err) {
-  //     console.error(err);
-  //     return;
-  //   }
-  // });
-
   let message = await ideaService.deleteFileByIdea(
     req.body.ideaId,
-    req.body.file_name,
-    req.body.path
+    req.body.file_name
   );
   return res.status(200).json(message);
 };
 
 let handleUpdateFile = async (req, res) => {
-  if (!req.file.filename || !req.file.path || !req.body.ideaId) {
+  if (!req.file.filename || !req.body.ideaId) {
     return res.status(200).json({
       errCode: 1,
       message: "Missing required parameters!",
@@ -89,7 +74,6 @@ let handleUpdateFile = async (req, res) => {
   } else {
     let message = await ideaService.handleUpdateFile(
       req.file.filename,
-      req.file.path,
       req.body.ideaId
     );
     return res.status(200).json(message);
@@ -105,7 +89,7 @@ let handleDeleteIdeaByUser = async (req, res) => {
   } else {
     let message = await ideaService.handleDeleteIdeaByUser(
       req.body.id,
-      req.body.linkFile
+      req.body.file_name
     );
     return res.status(200).json(message);
   }

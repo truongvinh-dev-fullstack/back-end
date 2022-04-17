@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       Ideas.hasMany(models.Ideas_islike, {
         foreignKey: "ideaId",
       });
+      Ideas.belongsTo(models.User, { foreignKey: "userId" });
     }
   }
   Ideas.init(
@@ -23,7 +24,6 @@ module.exports = (sequelize, DataTypes) => {
       idea_name: DataTypes.STRING,
       description: DataTypes.TEXT,
       file_name: DataTypes.STRING,
-      linkFile: DataTypes.STRING,
     },
     {
       sequelize,

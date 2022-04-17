@@ -63,6 +63,8 @@ let initWebRoutes = (app) => {
     "/api/get-all-category-by-department",
     categoryController.handleGetAllCategoryByDepartment
   );
+
+  router.get("/api/get-all-category", categoryController.handleGetAllCategory);
   router.put("/api/edit-category", categoryController.handleEditCategory);
   router.delete(
     "/api/delete-category",

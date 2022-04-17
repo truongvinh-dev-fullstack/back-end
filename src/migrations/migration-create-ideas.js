@@ -23,9 +23,6 @@ module.exports = {
       file_name: {
         type: Sequelize.STRING,
       },
-      linkFile: {
-        type: Sequelize.STRING,
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
