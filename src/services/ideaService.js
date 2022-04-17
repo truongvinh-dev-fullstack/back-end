@@ -3,6 +3,7 @@ const CsvParser = require("json2csv").Parser;
 const fs = require("fs");
 const AdmZip = require("adm-zip");
 var appRoot = require("app-root-path");
+import emailService from "./emailService";
 
 let getAllIdeasByCategory = (categoryId) => {
   return new Promise(async (resolve, reject) => {
@@ -48,6 +49,21 @@ let handleCreateIdea = (file_name, data) => {
   return new Promise(async (resolve, reject) => {
     let path = "./src/public/files/" + file_name;
     try {
+      let user = await db.User.findOne({
+        where: { id: data.userId },
+      });
+      let userName = user.lastname + " " + user.firstname;
+      let departmentId = user.departmentId;
+      let arrCoordinator = await db.User.findAll({
+        where: { departmentId: departmentId, role: "coordinator" },
+        attributes: ["email"],
+      });
+      let newEmails = [];
+      for (let i = 0; i < arrCoordinator.length; i++) {
+        let email = arrCoordinator[i].email;
+        newEmails.push(email);
+      }
+
       if (!file_name || !data) {
         fs.unlink(path, (err) => {
           if (err) {
@@ -62,6 +78,10 @@ let handleCreateIdea = (file_name, data) => {
           message: "Missing parameter",
         });
       } else {
+        await emailService.emailService({
+          receiverEmail: newEmails[0],
+          userName: userName + " " + "posted a new email",
+        });
         await db.Ideas.create({
           categoryId: data.categoryId,
           userId: data.userId,
@@ -72,6 +92,7 @@ let handleCreateIdea = (file_name, data) => {
         resolve({
           errCode: 0,
           message: "Done!",
+          data: newEmails,
         });
       }
     } catch (e) {

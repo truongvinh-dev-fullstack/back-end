@@ -1,4 +1,5 @@
 import db from "../models/index";
+import emailService from "./emailService";
 
 let handleLikeDisLike = (data) => {
   return new Promise(async (resolve, reject) => {
@@ -208,12 +209,25 @@ let handlePostComment = (data) => {
   return new Promise(async (resolve, reject) => {
     console.log("check data: ", data);
     try {
+      let idea = await db.Ideas.findOne({
+        where: { id: data.ideaId },
+      });
+      let userId = idea.userId;
+      let user = await db.User.findOne({
+        where: { id: userId },
+      });
+      let email = user.email;
+
       if (!data.userId || !data.ideaId || !data.comment) {
         resolve({
           errCode: -1,
           message: "Missing parameter",
         });
       } else {
+        await emailService.emailService({
+          receiverEmail: email,
+          userName: "You has a new comment!",
+        });
         await db.Ideas_comment.create({
           userId: data.userId,
           ideaId: data.ideaId,

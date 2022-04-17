@@ -17,6 +17,8 @@ let handleCreateIdea = async (req, res) => {
       req.file.filename,
       req.body
     );
+
+    console.log("check mail: ", message.data);
     return res.status(200).json(message);
   }
 };
