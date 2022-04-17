@@ -1,6 +1,6 @@
 import express from "express";
 import userController from "../controllers/userController";
-import homeController from "../controllers/homeController";
+
 import categoryController from "../controllers/categoryController";
 import DepartmentController from "../controllers/departmentController";
 import LikeCommentController from "../controllers/LikeCommentController";
@@ -36,19 +36,6 @@ const upload = multer({
 let router = express.Router();
 
 let initWebRoutes = (app) => {
-  router.get("/", homeController.getHomePage);
-  router.get("/about", homeController.getAboutPage);
-  router.get("/crud", homeController.getCRUD);
-  router.post("/post-crud", homeController.postCRUD);
-  router.post("/post-file", upload.single("file"), homeController.postfile);
-  router.get("/get-crud", homeController.displayGetCrud);
-  router.get("/getEditCRUD", homeController.getEditCRUD);
-  router.post("/put-crud", homeController.putCRUD);
-  router.post("/delete-crud", homeController.deleteCRUD);
-  router.get("/api/get-all-file", homeController.handleGetAllFile);
-  router.get("/download", homeController.handleDownloadFile);
-  router.delete("/delete-file", homeController.handleDeleteFile);
-
   router.post("/api/login", userController.handleLogin);
   router.get("/api/get-all-users", userController.handleGetAllUsers);
   router.post("/api/create-new-user", userController.handleCreateNewUser);
