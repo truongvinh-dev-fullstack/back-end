@@ -111,6 +111,11 @@ let handleDeleteComment = async (req, res) => {
   return res.status(200).json(message);
 };
 
+let handleDeleteLikeDislikeByIdea = async (req, res) => {
+  let message = LikeCommentService.deleteLikeDisLike(req.body.id);
+  return res.status(200).json(message);
+};
+
 module.exports = {
   handleLikeorDislike: handleLikeorDislike,
   getStatusIsLike: getStatusIsLike,
@@ -122,4 +127,5 @@ module.exports = {
   handlePostComment: handlePostComment,
   handleEditComment: handleEditComment,
   handleDeleteComment: handleDeleteComment,
+  handleDeleteLikeDislikeByIdea: handleDeleteLikeDislikeByIdea,
 };

@@ -320,6 +320,30 @@ let deleteComment = (id) => {
   });
 };
 
+let deleteLikeDisLike = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let ideas = await db.Ideas_islike.findAll({
+        raw: false,
+      });
+      if (ideas) {
+        await db.Ideas_islike.destroy({ where: { ideaId: id } });
+        resolve({
+          errCode: 0,
+          message: "Delete like and dislike successly!",
+        });
+      } else {
+        resolve({
+          errCode: 2,
+          message: "Fail",
+        });
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 module.exports = {
   handleLikeDisLike: handleLikeDisLike,
   getStatusIsLike: getStatusIsLike,
@@ -330,4 +354,5 @@ module.exports = {
   getAllCommentByIdea: getAllCommentByIdea,
   handleEditComment: handleEditComment,
   deleteComment: deleteComment,
+  deleteLikeDisLike: deleteLikeDisLike,
 };

@@ -100,6 +100,10 @@ let initWebRoutes = (app) => {
     "/api/getAllDisLikeByTopic",
     LikeCommentController.getAllDisLikeByTopic
   );
+  router.delete(
+    "/api/delete-like-dislike-by-idea",
+    LikeCommentController.handleDeleteLikeDislikeByIdea
+  );
 
   router.post(
     "/api/handlePostComment",
